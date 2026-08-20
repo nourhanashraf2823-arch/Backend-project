@@ -12,7 +12,7 @@ const userSchema=new Schema<IUser>(
             required:[true,'Full name is required'],
             trim:true
         },
-        email:{type:string,
+        email:{type:String,
         required:[true,'Email is reqired'],
         unique:true,
         lowercase:true,
@@ -20,12 +20,12 @@ const userSchema=new Schema<IUser>(
         match:[/^\S+@\S+\.\S+$/,'Please provide a valid email address']
     },
 password:{
-   type:string,
+   type:String,
    required:[true,'Password is required'],
    minlength:[6,'Password must be at least 6 characters']
     },
     role:{
-        type:string,
+        type:String,
         enum:{
         values:['Member','Trainer'],
         message:'Role must be either Member or Trainer'
