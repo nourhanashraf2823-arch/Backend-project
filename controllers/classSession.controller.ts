@@ -147,7 +147,7 @@ export const updateClassSession = async (req: Request, res: Response) => {
       });
     }
 
-    const { capacity, startTime, durationMinutes } = req.body;
+   const {title, capacity, startTime, durationMinutes } = req.body;
 
     if (capacity !== undefined) {
       if (!Number.isInteger(capacity) || capacity < 1) {
@@ -181,14 +181,15 @@ export const updateClassSession = async (req: Request, res: Response) => {
       }
     }
 
+   
     const updatedSession = await ClassSession.findByIdAndUpdate(
-      sessionId,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+  sessionId,
+  { title, capacity, startTime, durationMinutes },
+  {
+    new: true,
+    runValidators: true,
+  }
+);
 
     return res.status(200).json({
       message: "Class session updated successfully",
