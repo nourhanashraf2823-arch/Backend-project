@@ -146,36 +146,38 @@ export const updateClassSession = async (req: Request, res: Response) => {
       });
     }
 
-   const {title, capacity, startTime, durationMinutes } = req.body;
+    const { title, capacity, startTime, durationMinutes } = req.body;
 
-if (title !== undefined) {
-  if (typeof title !== "string" || title.trim() === "") {
-    return res.status(400).json({
-      message: "Title must be a non-empty string",
-    });
-  }
-}
+    if (title !== undefined) {
+      if (typeof title !== "string" || title.trim() === "") {
+        return res.status(400).json({
+          message: "Title must be a non-empty string",
+        });
+      }
+    }
+
     if (capacity !== undefined) {
-  if (!Number.isInteger(capacity) || capacity < 1) {
-    return res.status(400).json({
-      message: "Capacity must be a positive integer",
-    });
-  }
+      if (!Number.isInteger(capacity) || capacity < 1) {
+        return res.status(400).json({
+          message: "Capacity must be a positive integer",
+        });
+      }
 
-  const bookedCount = await Booking.countDocuments({
-    session: sessionId,
-    status: "booked",
-  });
+      const bookedCount = await Booking.countDocuments({
+        session: sessionId,
+        status: "booked",
+      });
 
-  if (capacity < bookedCount) {
-    return res.status(400).json({
-      message: "Capacity cannot be less than the number of booked seats",
-    });
-  }
-}
+      if (capacity < bookedCount) {
+        return res.status(400).json({
+          message: "Capacity cannot be less than the number of booked seats",
+        });
+      }
+    }
 
+    let sessionDate;
     if (startTime !== undefined) {
-      const sessionDate = new Date(startTime);
+      sessionDate = new Date(startTime);
 
       if (isNaN(sessionDate.getTime())) {
         return res.status(400).json({
@@ -198,15 +200,20 @@ if (title !== undefined) {
       }
     }
 
-   
+    const updateData: any = {};
+    if (title !== undefined) updateData.title = title;
+    if (capacity !== undefined) updateData.capacity = capacity;
+    if (startTime !== undefined) updateData.startTime = sessionDate;
+    if (durationMinutes !== undefined) updateData.durationMinutes = durationMinutes;
+
     const updatedSession = await ClassSession.findByIdAndUpdate(
-  sessionId,
-  { title, capacity, startTime, durationMinutes },
-  {
-    new: true,
-    runValidators: true,
-  }
-);
+      sessionId,
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     return res.status(200).json({
       message: "Class session updated successfully",
