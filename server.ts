@@ -1,18 +1,23 @@
 import dotenv from "dotenv";
+import express from "express";
+import connectDB from "./config/db";
+
+import bookingRoutes from "./routes/booking.router";
+import classSessionRoutes from "./routes/classSession.router";
+import searchRoutes from "./routes/search.router";
+
 dotenv.config();
 
-import express from "express";
-import {connectdb} from "./config/db"
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
-import { specs } from "./config/swagger"
 const app = express();
-const PORT =process.env.PORT||3000;
 
 app.use(express.json());
-app.use ('/api-docs',swaggerUi.serve,swaggerUi.setup(specs))
 
-connectdb();
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.use("/bookings", bookingRoutes);
+app.use("/class-sessions", classSessionRoutes);
+app.use("/search", searchRoutes);
+
+connectDB();
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
 });

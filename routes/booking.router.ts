@@ -6,10 +6,10 @@ import {
  gettraninerbookings,
  getMyBookings,
   
-} from "../controllers/booking.controller.js";
+} from "../controllers/booking.controller";
 
-import { authenticate } from "../middlewares/auth.middleware.js";
-import { authrizeRoles } from "../middlewares/role.middleware.js";
+import { authenticate } from "../middlewares/auth.middleware";
+import { authrizeRoles } from "../middlewares/role.middleware";
 
 const router = Router();
 
