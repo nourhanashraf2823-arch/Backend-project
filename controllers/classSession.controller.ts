@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import ClassSession from "../models/classSession.model";
-
+import { Booking } from "../models/booking.model";
 export const getAllClassSessions = async (req: Request, res: Response) => {
   try {
     const classSessions = await ClassSession.find().populate(
@@ -156,12 +156,23 @@ if (title !== undefined) {
   }
 }
     if (capacity !== undefined) {
-      if (!Number.isInteger(capacity) || capacity < 1) {
-        return res.status(400).json({
-          message: "Capacity must be a positive integer",
-        });
-      }
-    }
+  if (!Number.isInteger(capacity) || capacity < 1) {
+    return res.status(400).json({
+      message: "Capacity must be a positive integer",
+    });
+  }
+
+  const bookedCount = await Booking.countDocuments({
+    session: sessionId,
+    status: "booked",
+  });
+
+  if (capacity < bookedCount) {
+    return res.status(400).json({
+      message: "Capacity cannot be less than the number of booked seats",
+    });
+  }
+}
 
     if (startTime !== undefined) {
       const sessionDate = new Date(startTime);
@@ -238,6 +249,16 @@ export const deleteClassSession = async (req: Request, res: Response) => {
       });
     }
 
+const confirmedBooking = await Booking.findOne({
+  session: sessionId,
+  status: "booked",
+});
+
+if (confirmedBooking) {
+  return res.status(400).json({
+    message: "Cannot delete a session with confirmed bookings",
+  });
+}
     await ClassSession.findByIdAndDelete(sessionId);
 
     return res.status(200).json({
