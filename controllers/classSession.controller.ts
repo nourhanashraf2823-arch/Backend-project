@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import ClassSession from "../models/classSession.model";
@@ -149,6 +148,13 @@ export const updateClassSession = async (req: Request, res: Response) => {
 
    const {title, capacity, startTime, durationMinutes } = req.body;
 
+if (title !== undefined) {
+  if (typeof title !== "string" || title.trim() === "") {
+    return res.status(400).json({
+      message: "Title must be a non-empty string",
+    });
+  }
+}
     if (capacity !== undefined) {
       if (!Number.isInteger(capacity) || capacity < 1) {
         return res.status(400).json({
