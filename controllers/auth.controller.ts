@@ -53,7 +53,11 @@ export const login=async(req:Request,res:Response)=>{
         if(!ismatch){
             return res.status(400).json({message:'Invalid email or password.'});
         }
-        const secret=process.env.JWT_SECRET||'fallback_secret';
+        const secret = process.env.JWT_SECRET;
+
+if (!secret) {
+  throw new Error("JWT_SECRET is not configured");
+}
         const token=jwt.sign({
             id:user.id,role:user.role },secret,{expiresIn:'7d'}
         );

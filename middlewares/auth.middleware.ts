@@ -21,7 +21,13 @@ export const authenticate=(req:Request,res:Response,next:NextFunction)=>{
     }
     const token=authHeader.split(' ')[1];
     try{
-        const secret=process.env.JWT_SECRET||'Fallback_Secret';
+       const secret = process.env.JWT_SECRET;
+
+if (!secret) {
+  return res.status(500).json({
+    message: "JWT_SECRET is not configured",
+  });
+}
         const decoded=jwt.verify(token,secret) as DecodedToken;
         req.user={
             id:decoded.id,
