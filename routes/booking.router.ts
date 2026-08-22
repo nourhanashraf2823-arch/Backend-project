@@ -14,12 +14,32 @@ import { authrizeRoles } from "../middlewares/role.middleware";
 const router = Router();
 
 /**
+ /**
  * @swagger
  * /api/bookings:
  *   post:
  *     summary: Book a class session
  *     tags:
  *       - Bookings
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - classId
+ *               - date
+ *             properties:
+ *               classId:
+ *                 type: string
+ *                 example: "64f1a2b3c4d5e6f7a8b9c0d1"
+ *               date:
+ *                 type: string
+ *                 example: "2026-09-01"
+ *     responses:
+ *       201:
+ *         description: Booking created successfully
  */
 router.post(
   "/",
@@ -34,6 +54,9 @@ router.post(
  *     summary: Get my bookings
  *     tags:
  *       - Bookings
+ *     responses:
+ *       200:
+ *         description: List of user bookings
  */
 router.get(
   "/my",
@@ -48,6 +71,16 @@ router.get(
  *     summary: Cancel my booking
  *     tags:
  *       - Bookings
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The booking ID
+ *     responses:
+ *       200:
+ *         description: Booking cancelled successfully
  */
 router.patch(
   "/:id/cancel",
@@ -56,12 +89,16 @@ router.patch(
   cancelbooking
 );
 /**
+ /**
  * @swagger
  * /api/bookings/trainer:
  *   get:
  *     summary: Get trainer bookings
  *     tags:
  *       - Bookings
+ *     responses:
+ *       200:
+ *         description: List of bookings for the trainer
  */
 router.get(
   "/trainer",

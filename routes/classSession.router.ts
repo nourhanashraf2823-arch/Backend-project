@@ -19,8 +19,13 @@ const router = Router();
  *     summary: Get all class sessions
  *     tags:
  *       - Class Sessions
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved all class sessions
  */
 router.get("/", getAllClassSessions);
+/**
+ * @swagger
 /**
  * @swagger
  * /api/sessions/{id}:
@@ -28,6 +33,18 @@ router.get("/", getAllClassSessions);
  *     summary: Get class session by ID
  *     tags:
  *       - Class Sessions
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Class session ID
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the class session
+ *       404:
+ *         description: Class session not found
  */
 router.get("/:id", getClassSessionById);
 /**
@@ -37,6 +54,32 @@ router.get("/:id", getClassSessionById);
  *     summary: Create class session
  *     tags:
  *       - Class Sessions
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - date
+ *               - capacity
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Yoga Class"
+ *               description:
+ *                 type: string
+ *                 example: "Morning relaxation and flexibility training"
+ *               date:
+ *                 type: string
+ *                 example: "2026-09-01T10:00:00.000Z"
+ *               capacity:
+ *                 type: number
+ *                 example: 15
+ *     responses:
+ *       201:
+ *         description: Class session created successfully
  */
 router.post(
   "/",
@@ -51,6 +94,35 @@ router.post(
  *     summary: Update class session
  *     tags:
  *       - Class Sessions
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Class session ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Advanced Yoga Class"
+ *               description:
+ *                 type: string
+ *                 example: "Updated session details"
+ *               date:
+ *                 type: string
+ *                 example: "2026-09-02T10:00:00.000Z"
+ *               capacity:
+ *                 type: number
+ *                 example: 20
+ *     responses:
+ *       200:
+ *         description: Class session updated successfully
  */
 router.put(
   "/:id",
@@ -65,6 +137,16 @@ router.put(
  *     summary: Delete class session
  *     tags:
  *       - Class Sessions
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Class session ID
+ *     responses:
+ *       200:
+ *         description: Class session deleted successfully
  */
 router.delete(
   "/:id",
