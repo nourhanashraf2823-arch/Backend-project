@@ -40,6 +40,7 @@ router.get("/", getAllClassSessions);
  *         schema:
  *           type: string
  *         description: Class session ID
+ *         example: "6a896c4d0b443b4502d51b0f"
  *     responses:
  *       200:
  *         description: Successfully retrieved the class session
@@ -65,28 +66,32 @@ router.get("/:id", getClassSessionById);
  *             type: object
  *             required:
  *               - title
- *               - date
  *               - capacity
+ *               - startTime
+ *               - durationMinutes
  *             properties:
  *               title:
  *                 type: string
  *                 example: "Yoga Class"
- *               description:
- *                 type: string
- *                 example: "Morning relaxation and flexibility training"
- *               date:
- *                 type: string
- *                 example: "2026-09-01T10:00:00.000Z"
  *               capacity:
  *                 type: number
  *                 example: 15
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2026-09-01T10:00:00.000Z"
+ *               durationMinutes:
+ *                 type: number
+ *                 example: 60
  *     responses:
  *       201:
  *         description: Class session created successfully
+ *       400:
+ *         description: Invalid session data
  *       401:
  *         description: Unauthorized
  *       403:
- *         description: Forbidden
+ *         description: Trainer role required
  */
 router.post(
   "/",
@@ -111,6 +116,7 @@ router.post(
  *         schema:
  *           type: string
  *         description: Class session ID
+ *         example: "6a896c4d0b443b4502d51b0f"
  *     requestBody:
  *       required: true
  *       content:
@@ -121,22 +127,23 @@ router.post(
  *               title:
  *                 type: string
  *                 example: "Advanced Yoga Class"
- *               description:
- *                 type: string
- *                 example: "Updated session details"
- *               date:
- *                 type: string
- *                 example: "2026-09-02T10:00:00.000Z"
  *               capacity:
  *                 type: number
  *                 example: 20
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2026-09-02T10:00:00.000Z"
+ *               durationMinutes:
+ *                 type: number
+ *                 example: 60
  *     responses:
  *       200:
  *         description: Class session updated successfully
  *       401:
  *         description: Unauthorized
  *       403:
- *         description: Forbidden
+ *         description: Trainer role required
  *       404:
  *         description: Class session not found
  */
@@ -163,13 +170,14 @@ router.put(
  *         schema:
  *           type: string
  *         description: Class session ID
+ *         example: "6a89701e0b443b4502d51b11"
  *     responses:
  *       200:
  *         description: Class session deleted successfully
  *       401:
  *         description: Unauthorized
  *       403:
- *         description: Forbidden
+ *         description: Trainer role required
  *       404:
  *         description: Class session not found
  */
