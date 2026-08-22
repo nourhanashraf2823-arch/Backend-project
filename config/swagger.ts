@@ -11,7 +11,7 @@ const options = {
         },
         servers : [
             {
-                url: "https://backend-project-production-7895.up.railway.app",
+                url: "https://backend-project-production-8cde.up.railway.app",
                 description: "Production Server (Railway)"
             },
             {
