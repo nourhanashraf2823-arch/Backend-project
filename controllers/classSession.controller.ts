@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import ClassSession from "../models/classSession.model";
-
+import { Booking } from "../models/booking.model";
 export const getAllClassSessions = async (req: Request, res: Response) => {
   try {
     const classSessions = await ClassSession.find().populate(
@@ -22,7 +22,7 @@ export const getAllClassSessions = async (req: Request, res: Response) => {
 
 export const getClassSessionById = async (req: Request, res: Response) => {
   try {
-    const sessionId = req.params.id as string;
+    const sessionId = req.params.id;
 
     if (!sessionId) {
       return res.status(400).json({
@@ -30,7 +30,7 @@ export const getClassSessionById = async (req: Request, res: Response) => {
       });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+    if (!mongoose.Types.ObjectId.isValid(sessionId as string )) {
       return res.status(400).json({
         message: "Invalid session id",
       });
@@ -118,7 +118,7 @@ export const createClassSession = async (req: Request, res: Response) => {
 
 export const updateClassSession = async (req: Request, res: Response) => {
   try {
-    const sessionId = req.params.id as string;
+    const sessionId = req.params.id;
 
     if (!sessionId) {
       return res.status(400).json({
@@ -126,7 +126,7 @@ export const updateClassSession = async (req: Request, res: Response) => {
       });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+    if (!mongoose.Types.ObjectId.isValid(sessionId as string)) {
       return res.status(400).json({
         message: "Invalid session id",
       });
@@ -146,7 +146,15 @@ export const updateClassSession = async (req: Request, res: Response) => {
       });
     }
 
-    const { capacity, startTime, durationMinutes } = req.body;
+    const { title, capacity, startTime, durationMinutes } = req.body;
+
+    if (title !== undefined) {
+      if (typeof title !== "string" || title.trim() === "") {
+        return res.status(400).json({
+          message: "Title must be a non-empty string",
+        });
+      }
+    }
 
     if (capacity !== undefined) {
       if (!Number.isInteger(capacity) || capacity < 1) {
@@ -154,10 +162,22 @@ export const updateClassSession = async (req: Request, res: Response) => {
           message: "Capacity must be a positive integer",
         });
       }
+
+      const bookedCount = await Booking.countDocuments({
+        session: sessionId,
+        status: "booked",
+      });
+
+      if (capacity < bookedCount) {
+        return res.status(400).json({
+          message: "Capacity cannot be less than the number of booked seats",
+        });
+      }
     }
 
+    let sessionDate;
     if (startTime !== undefined) {
-      const sessionDate = new Date(startTime);
+      sessionDate = new Date(startTime);
 
       if (isNaN(sessionDate.getTime())) {
         return res.status(400).json({
@@ -180,9 +200,15 @@ export const updateClassSession = async (req: Request, res: Response) => {
       }
     }
 
+    const updateData: any = {};
+    if (title !== undefined) updateData.title = title;
+    if (capacity !== undefined) updateData.capacity = capacity;
+    if (startTime !== undefined) updateData.startTime = sessionDate;
+    if (durationMinutes !== undefined) updateData.durationMinutes = durationMinutes;
+
     const updatedSession = await ClassSession.findByIdAndUpdate(
       sessionId,
-      req.body,
+      updateData,
       {
         new: true,
         runValidators: true,
@@ -202,7 +228,7 @@ export const updateClassSession = async (req: Request, res: Response) => {
 
 export const deleteClassSession = async (req: Request, res: Response) => {
   try {
-    const sessionId = req.params.id as string;
+    const sessionId = req.params.id;
 
     if (!sessionId) {
       return res.status(400).json({
@@ -210,7 +236,7 @@ export const deleteClassSession = async (req: Request, res: Response) => {
       });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+    if (!mongoose.Types.ObjectId.isValid(sessionId as string)) {
       return res.status(400).json({
         message: "Invalid session id",
       });
@@ -230,6 +256,16 @@ export const deleteClassSession = async (req: Request, res: Response) => {
       });
     }
 
+const confirmedBooking = await Booking.findOne({
+  session: sessionId,
+  status: "booked",
+});
+
+if (confirmedBooking) {
+  return res.status(400).json({
+    message: "Cannot delete a session with confirmed bookings",
+  });
+}
     await ClassSession.findByIdAndDelete(sessionId);
 
     return res.status(200).json({
