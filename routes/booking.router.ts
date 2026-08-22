@@ -21,6 +21,8 @@ const router = Router();
  *     summary: Book a class session
  *     tags:
  *       - Bookings
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -33,10 +35,8 @@ const router = Router();
  *             properties:
  *               classId:
  *                 type: string
- *                 example: "64f1a2b3c4d5e6f7a8b9c0d1"
  *               date:
  *                 type: string
- *                 example: "2026-09-01"
  *     responses:
  *       201:
  *         description: Booking created successfully
