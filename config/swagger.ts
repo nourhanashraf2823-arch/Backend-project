@@ -5,15 +5,15 @@ const options = {
     definition : {
         openapi : "3.0.0",
         info : {
-            title : "Train station API",
+            title : "Gym /fitness class booking API",
             version : "1.0.0",
-            describtion:"A simple Express Train Station API"
+            describtion:"Gym booking system API"
         },
         servers :[{
             url :"http://localhost:3000"
         }]
     },
-    apis : ["./src/**/*.ts"]
+    apis : ["./routes/*.ts"]
     }
     export const specs =swaggerJsdoc(options)
    
