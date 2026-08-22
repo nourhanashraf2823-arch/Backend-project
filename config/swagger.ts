@@ -7,13 +7,21 @@ const options = {
         info : {
             title : "Gym /fitness class booking API",
             version : "1.0.0",
-            describtion:"Gym booking system API"
+            description: "Gym booking system API" 
         },
-        servers :[{
-            url :"http://localhost:3000"
-        }]
+        servers : [
+            {
+                url: "https://backend-project-production-7895.up.railway.app",
+                description: "Production Server (Railway)"
+            },
+            {
+                url: "http://localhost:3000",
+                description: "Local Development Server"
+            }
+        ]
     },
-    apis : ["./routes/*.ts"]
-    }
-    export const specs =swaggerJsdoc(options)
+    apis : ["./routes/*.ts"] 
+}
+
+export const specs = swaggerJsdoc(options);
    
