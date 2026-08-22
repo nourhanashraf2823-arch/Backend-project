@@ -5,13 +5,14 @@ import {
   getClassSessionById,
   createClassSession,
   updateClassSession,
-  deleteClassSession
+  deleteClassSession,
 } from "../controllers/classSession.controller";
 
 import { authenticate } from "../middlewares/auth.middleware";
 import { authrizeRoles } from "../middlewares/role.middleware";
 
 const router = Router();
+
 /**
  * @swagger
  * /api/sessions:
@@ -46,6 +47,7 @@ router.get("/", getAllClassSessions);
  *         description: Class session not found
  */
 router.get("/:id", getClassSessionById);
+
 /**
  * @swagger
  * /api/sessions:
@@ -53,6 +55,8 @@ router.get("/:id", getClassSessionById);
  *     summary: Create class session
  *     tags:
  *       - Class Sessions
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -79,6 +83,10 @@ router.get("/:id", getClassSessionById);
  *     responses:
  *       201:
  *         description: Class session created successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  */
 router.post(
   "/",
@@ -86,6 +94,7 @@ router.post(
   authrizeRoles(["Trainer"]),
   createClassSession
 );
+
 /**
  * @swagger
  * /api/sessions/{id}:
@@ -93,6 +102,8 @@ router.post(
  *     summary: Update class session
  *     tags:
  *       - Class Sessions
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -122,6 +133,12 @@ router.post(
  *     responses:
  *       200:
  *         description: Class session updated successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Class session not found
  */
 router.put(
   "/:id",
@@ -129,6 +146,7 @@ router.put(
   authrizeRoles(["Trainer"]),
   updateClassSession
 );
+
 /**
  * @swagger
  * /api/sessions/{id}:
@@ -136,6 +154,8 @@ router.put(
  *     summary: Delete class session
  *     tags:
  *       - Class Sessions
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -146,6 +166,12 @@ router.put(
  *     responses:
  *       200:
  *         description: Class session deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Class session not found
  */
 router.delete(
   "/:id",
