@@ -24,8 +24,7 @@ const router = Router();
  *         description: Successfully retrieved all class sessions
  */
 router.get("/", getAllClassSessions);
-/**
- * @swagger
+
 /**
  * @swagger
  * /api/sessions/{id}:

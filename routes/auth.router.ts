@@ -33,7 +33,7 @@ const router=Router();
  *         description: User registered successfully
  */
 router.post('/register',register);
-/**
+
 /**
  * @swagger
  * /api/auth/login:

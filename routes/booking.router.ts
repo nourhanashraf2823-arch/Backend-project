@@ -13,7 +13,7 @@ import { authrizeRoles } from "../middlewares/role.middleware";
 
 const router = Router();
 
-/**
+
  /**
  * @swagger
  * /api/bookings:
@@ -88,7 +88,7 @@ router.patch(
   authrizeRoles(["Member"]),
   cancelbooking
 );
-/**
+
  /**
  * @swagger
  * /api/bookings/trainer:
